@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         // Roll Button
         var btnRoll = findViewById<Button>(R.id.btnRoll)
-        btnRoll.setOnClickListener { _ -> onRollClick(rollPicker.value) }
+        btnRoll.setOnClickListener { onRollClick(rollPicker.value) }
 
         if (savedInstanceState != null) {
             rollPicker.value = savedInstanceState.getInt("pickerValue") // Set number picker to previous value
