@@ -1,13 +1,15 @@
 package dk.easv.compulsory.dicecup
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Parcelable
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
 import dk.easv.compulsory.dicecup.models.BeDie
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,13 +26,11 @@ class MainActivity : AppCompatActivity() {
     private val rng = Random()
 
     private var roll = 1
+    private var rollsAsInt = ArrayList<Int>() // Needed for turn-safe because you can't save instances of custom models
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Dice grid view
-        var diceLayout = findViewById<GridLayout>(R.id.gridLayout)
 
         // Dice amount picker
         var rollPicker = findViewById<NumberPicker>(R.id.nPRollAmount)
@@ -46,6 +46,19 @@ class MainActivity : AppCompatActivity() {
         // Roll Button
         var btnRoll = findViewById<Button>(R.id.btnRoll)
         btnRoll.setOnClickListener { _ -> onRollClick(rollPicker.value) }
+
+        if (savedInstanceState != null) {
+            rollPicker.value = savedInstanceState.getInt("pickerValue") // Set number picker to previous value
+            rollsAsInt = savedInstanceState.getIntegerArrayList("rolls") as ArrayList<Int>
+
+            val rollsTemp = ArrayList<BeDie>()
+
+            for (i in 1..rollsAsInt.size step 1) {
+                rollsTemp.add(diceMap[rollsAsInt[i-1]]!!)
+            }
+
+            showDice(rollsTemp)
+        }
     }
 
     private fun onRollClick(rollAmount: Int) {
@@ -55,13 +68,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun rollDice(rollAmount: Int): ArrayList<BeDie> {
         var rolls = arrayListOf<BeDie>()
+        this.rollsAsInt.clear()
 
         for (i in 1..rollAmount step 1) {
             val roll = rng.nextInt(6) + 1
             rolls.add(diceMap[roll]!!)
+            this.rollsAsInt.add(roll)
         }
 
-        Log.d("asdw", rolls.toString())
         return rolls
     }
 
@@ -156,5 +170,12 @@ class MainActivity : AppCompatActivity() {
                 diceImageSix.setImageResource(dice[5].img)
             }
         }
+    }
+
+    override fun onSaveInstanceState(state: Bundle) {
+        super.onSaveInstanceState(state)
+
+        state.putIntegerArrayList("rolls", rollsAsInt)
+        state.putInt("pickerValue", roll)
     }
 }
