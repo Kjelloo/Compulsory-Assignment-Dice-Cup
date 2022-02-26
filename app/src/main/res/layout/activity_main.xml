@@ -3,15 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/listImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/list"/>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/listImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:columnCount="2">
 
         <ImageView
@@ -72,18 +82,22 @@
 
     <NumberPicker
         android:id="@+id/nPRollAmount"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_above="@+id/btnRoll"
+        android:fadeScrollbars="true"
+        />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRoll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:text="Roll"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="ROLL"
+        app:cornerRadius="0dp"
+        android:textSize="25dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-6dp"
         android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

@@ -7,6 +7,16 @@
     android:paddingRight="16dp"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/listImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/list"/>
+
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="wrap_content"
@@ -72,18 +82,20 @@
 
     <NumberPicker
         android:id="@+id/nPRollAmount"
-        android:layout_width="wrap_content"
-        android:minWidth="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
+        android:layout_margin="20dp"
         android:layout_toLeftOf="@+id/btnRoll"
         android:layout_centerVertical="true"/>
 
     <Button
         android:id="@+id/btnRoll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
         android:layout_marginHorizontal="6dp"
         android:text="Roll"
+        android:textSize="25dp"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:layout_alignParentRight="true" />
