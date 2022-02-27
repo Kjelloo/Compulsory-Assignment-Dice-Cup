@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CA1DiceCup">
         <activity
+            android:name=".HistoryActivity"
+            android:label="Roll history"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

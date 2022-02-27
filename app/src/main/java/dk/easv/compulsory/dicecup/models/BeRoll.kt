@@ -1,7 +1,5 @@
 package dk.easv.compulsory.dicecup.models
 
-import java.util.*
-import kotlin.collections.ArrayList
+import java.io.Serializable
 
-
-data class BeRoll(val id: Int, val rolls: ArrayList<BeRoll>, val timestamp: Date)
+class BeRoll(val id: Int, val rolls: ArrayList<BeDie>, val timestamp: String): Serializable

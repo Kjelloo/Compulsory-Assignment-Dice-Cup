@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HistoryActivity">
+
+    <RelativeLayout
+        android:id="@+id/iconLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/imgBackArrow"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="15dp"
+            android:layout_centerHorizontal="true"/>
+
+        <ToggleButton
+            android:id="@+id/tBPip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="true"
+            android:textOn="IMAGE"
+            android:textOff="TEXT"/>
+
+        <ImageView
+            android:id="@+id/imgTrash"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_restore_from_trash_24"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lvRollHistory"
+        android:layout_below="@+id/iconLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/black"
+        android:headerDividersEnabled="true"
+        android:dividerHeight="1dp"/>
+
+</RelativeLayout>
