@@ -21,15 +21,22 @@
             android:layout_marginHorizontal="15dp"
             android:layout_centerHorizontal="true"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dice as: "
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tBPip"/>
+
         <ToggleButton
             android:id="@+id/tBPip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:layout_centerHorizontal="false"
+            android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:textOn="IMAGE"
-            android:textOff="TEXT"/>
+            android:textOn="IMAGES"
+            android:textOff="NUMBERS"/>
 
         <ImageView
             android:id="@+id/imgTrash"

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.Picasso
 import dk.easv.compulsory.dicecup.models.BeDie
 import dk.easv.compulsory.dicecup.models.BeRoll
 import java.lang.Exception
@@ -103,7 +104,6 @@ class MainActivity : AppCompatActivity() {
             // Depending on how many dice are chosen to be rolled, generate a random number between 1 and 6
             for (i in 1..rollAmount step 1) {
                 val roll = rng.nextInt(6) + 1
-
                 rolls.add(diceMap[roll]!!)
             }
 
@@ -117,55 +117,50 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDiceVisibility(diceAmount: Int) {
         try {
-            val diceImageOne = findViewById<ImageView>(R.id.imgDice1)
-            val diceImageTwo = findViewById<ImageView>(R.id.imgDice2)
-            val diceImageThree = findViewById<ImageView>(R.id.imgDice3)
-            val diceImageFour = findViewById<ImageView>(R.id.imgDice4)
-            val diceImageFive = findViewById<ImageView>(R.id.imgDice5)
-            val diceImageSix = findViewById<ImageView>(R.id.imgDice6)
+            val imageViewList = ArrayList<ImageView>()
+            imageViewList.add(findViewById(R.id.imgDice1))
+            imageViewList.add(findViewById(R.id.imgDice2))
+            imageViewList.add(findViewById(R.id.imgDice3))
+            imageViewList.add(findViewById(R.id.imgDice4))
+            imageViewList.add(findViewById(R.id.imgDice5))
+            imageViewList.add(findViewById(R.id.imgDice6))
 
             // Remove visibility of all dice images
-            diceImageOne.visibility = View.GONE
-            diceImageTwo.visibility = View.GONE
-            diceImageThree.visibility = View.GONE
-            diceImageFour.visibility = View.GONE
-            diceImageFive.visibility = View.GONE
-            diceImageSix.visibility = View.GONE
+            for (i in 0 until imageViewList.size step 1) {
+                imageViewList[i].visibility = View.GONE
+            }
 
-            // Adds dice image visibility depending on the amount of dice that need to be shown
+            // sets dice image visibility depending on the amount of dice that need to be shown
             when(diceAmount) {
                 1 -> {
-                    diceImageOne.visibility = View.VISIBLE
+                    for (i in 0 until imageViewList.size-5 step 1) {
+                        imageViewList[i].visibility = View.VISIBLE
+                    }
                 }
                 2 -> {
-                    diceImageOne.visibility = View.VISIBLE
-                    diceImageTwo.visibility = View.VISIBLE
+                    for (i in 0 until imageViewList.size-4 step 1) {
+                        imageViewList[i].visibility = View.VISIBLE
+                    }
                 }
                 3 -> {
-                    diceImageOne.visibility = View.VISIBLE
-                    diceImageTwo.visibility = View.VISIBLE
-                    diceImageThree.visibility = View.VISIBLE
+                    for (i in 0 until imageViewList.size-3 step 1) {
+                        imageViewList[i].visibility = View.VISIBLE
+                    }
                 }
                 4 -> {
-                    diceImageOne.visibility = View.VISIBLE
-                    diceImageTwo.visibility = View.VISIBLE
-                    diceImageThree.visibility = View.VISIBLE
-                    diceImageFour.visibility = View.VISIBLE
+                    for (i in 0 until imageViewList.size-2 step 1) {
+                        imageViewList[i].visibility = View.VISIBLE
+                    }
                 }
                 5 -> {
-                    diceImageOne.visibility = View.VISIBLE
-                    diceImageTwo.visibility = View.VISIBLE
-                    diceImageThree.visibility = View.VISIBLE
-                    diceImageFour.visibility = View.VISIBLE
-                    diceImageFive.visibility = View.VISIBLE
+                    for (i in 0 until imageViewList.size-1 step 1) {
+                        imageViewList[i].visibility = View.VISIBLE
+                    }
                 }
                 6 -> {
-                    diceImageOne.visibility = View.VISIBLE
-                    diceImageTwo.visibility = View.VISIBLE
-                    diceImageThree.visibility = View.VISIBLE
-                    diceImageFour.visibility = View.VISIBLE
-                    diceImageFive.visibility = View.VISIBLE
-                    diceImageSix.visibility = View.VISIBLE
+                    for (i in 0 until imageViewList.size step 1) {
+                        imageViewList[i].visibility = View.VISIBLE
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -175,45 +170,76 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDiceImage(dice: ArrayList<BeDie>) {
         try {
-            val diceImageOne = findViewById<ImageView>(R.id.imgDice1)
-            val diceImageTwo = findViewById<ImageView>(R.id.imgDice2)
-            val diceImageThree = findViewById<ImageView>(R.id.imgDice3)
-            val diceImageFour = findViewById<ImageView>(R.id.imgDice4)
-            val diceImageFive = findViewById<ImageView>(R.id.imgDice5)
-            val diceImageSix = findViewById<ImageView>(R.id.imgDice6)
+            val imageViewList = ArrayList<ImageView>()
+            imageViewList.add(findViewById(R.id.imgDice1))
+            imageViewList.add(findViewById(R.id.imgDice2))
+            imageViewList.add(findViewById(R.id.imgDice3))
+            imageViewList.add(findViewById(R.id.imgDice4))
+            imageViewList.add(findViewById(R.id.imgDice5))
+            imageViewList.add(findViewById(R.id.imgDice6))
 
-            // Sets the dice images depending on how many dice are have been rolled
+            // Sets the dice images depending on the dice that were rolled
             when (dice.size) {
-                1 -> diceImageOne.setImageResource(dice[0].img)
+                1 -> {
+                    for (i in 0 until imageViewList.size-5 step 1) {
+                        // Using picasso to cache the dice images
+                        Picasso
+                            .get()
+                            .load(dice[i].img)
+                            .resize(500,500)
+                            .onlyScaleDown()
+                            .into(imageViewList[i])
+                    }
+                }
                 2 -> {
-                    diceImageOne.setImageResource(dice[0].img)
-                    diceImageTwo.setImageResource(dice[1].img)
+                    for (i in 0 until imageViewList.size-4 step 1) {
+                        Picasso
+                            .get()
+                            .load(dice[i].img)
+                            .resize(500,500)
+                            .onlyScaleDown()
+                            .into(imageViewList[i])
+                    }
                 }
                 3 -> {
-                    diceImageOne.setImageResource(dice[0].img)
-                    diceImageTwo.setImageResource(dice[1].img)
-                    diceImageThree.setImageResource(dice[2].img)
+                    for (i in 0 until imageViewList.size-3 step 1) {
+                        Picasso
+                            .get()
+                            .load(dice[i].img)
+                            .resize(500,500)
+                            .onlyScaleDown()
+                            .into(imageViewList[i])
+                    }
                 }
                 4 -> {
-                    diceImageOne.setImageResource(dice[0].img)
-                    diceImageTwo.setImageResource(dice[1].img)
-                    diceImageThree.setImageResource(dice[2].img)
-                    diceImageFour.setImageResource(dice[3].img)
+                    for (i in 0 until imageViewList.size-2 step 1) {
+                        Picasso
+                            .get()
+                            .load(dice[i].img)
+                            .resize(500,500)
+                            .onlyScaleDown()
+                            .into(imageViewList[i])
+                    }
                 }
                 5 -> {
-                    diceImageOne.setImageResource(dice[0].img)
-                    diceImageTwo.setImageResource(dice[1].img)
-                    diceImageThree.setImageResource(dice[2].img)
-                    diceImageFour.setImageResource(dice[3].img)
-                    diceImageFive.setImageResource(dice[4].img)
+                    for (i in 0 until imageViewList.size-1 step 1) {
+                        Picasso
+                            .get()
+                            .load(dice[i].img)
+                            .resize(500,500)
+                            .onlyScaleDown()
+                            .into(imageViewList[i])
+                    }
                 }
                 6 -> {
-                    diceImageOne.setImageResource(dice[0].img)
-                    diceImageTwo.setImageResource(dice[1].img)
-                    diceImageThree.setImageResource(dice[2].img)
-                    diceImageFour.setImageResource(dice[3].img)
-                    diceImageFive.setImageResource(dice[4].img)
-                    diceImageSix.setImageResource(dice[5].img)
+                    for (i in 0 until imageViewList.size step 1) {
+                        Picasso
+                            .get()
+                            .load(dice[i].img)
+                            .resize(500,500)
+                            .onlyScaleDown()
+                            .into(imageViewList[i])
+                    }
                 }
             }
         } catch (e: Exception) {
