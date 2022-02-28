@@ -45,6 +45,10 @@ class HistoryActivity : AppCompatActivity() {
         // Toggle button to view pips as images or as text
         val togglePipImage = findViewById<ToggleButton>(R.id.tBPip)
         togglePipImage.setOnClickListener { changePipViewType(togglePipImage.isChecked) }
+
+        if (savedInstanceState != null) {
+            idCounter = savedInstanceState.getInt("idCounter")
+        }
     }
 
     private fun changePipViewType(checked: Boolean) {
@@ -77,6 +81,12 @@ class HistoryActivity : AppCompatActivity() {
         intent.putExtra("historyBundle", bundle)
 
         startActivity(intent)
+    }
+
+    override fun onSaveInstanceState(state: Bundle) {
+        super.onSaveInstanceState(state)
+
+        state.putInt("idCounter", idCounter)
     }
 
     internal class HistoryAdapter(context: Context, private val rollHistory: ArrayList<BeRoll>, private val asImage: Boolean): ArrayAdapter<BeRoll>(context,  0, rollHistory) {

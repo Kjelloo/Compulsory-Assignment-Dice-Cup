@@ -40,35 +40,41 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Dice amount picker
-        val rollPicker = findViewById<NumberPicker>(R.id.nPRollAmount)
-        rollPicker.minValue = 1
-        rollPicker.maxValue = 6
-        rollPicker.value = 6
-        diceAmount = rollPicker.value // Saving the number picker value for turn safety
+        val rollAmountPicker = findViewById<NumberPicker>(R.id.nPRollAmount)
+        rollAmountPicker.minValue = 1
+        rollAmountPicker.maxValue = 6
+        rollAmountPicker.value = 6
 
+        // Saving the number picker value for turn safety
+        diceAmount = rollAmountPicker.value
+
+        // Gets values from history activity
         if (intent.extras != null) {
-            // Gets rolling history from history activity
             val historyBundle = intent.getBundleExtra("historyBundle")
             rollHistory = historyBundle?.getSerializable("rollingHistory") as ArrayList<BeRoll>
             idCounter = intent.getIntExtra("idCounter", -1)
         }
 
-        rollPicker.setOnValueChangedListener { _, _, newVal ->
+        rollAmountPicker.setOnValueChangedListener { _, _, newVal ->
+            // Sets the amount of dice shown depending on the rollAmountPicker value
             setDiceVisibility(newVal)
             diceAmount = newVal
         }
 
         // Roll Button
         val btnRoll = findViewById<Button>(R.id.btnRoll)
-        btnRoll.setOnClickListener { onRollButtonClick(rollPicker.value) }
+        btnRoll.setOnClickListener { onRollButtonClick(rollAmountPicker.value) }
 
         if (savedInstanceState != null) {
-            rollPicker.value = savedInstanceState.getInt("pickerValue") // Set number picker to previous value
+            // Set number picker to previous value
+            rollAmountPicker.value = savedInstanceState.getInt("pickerValue")
             currentRoll = savedInstanceState.getParcelableArrayList<BeDie>("rolls") as ArrayList<BeDie>
             rollHistory = savedInstanceState.getSerializable("rollingHistory") as ArrayList<BeRoll>
-            diceAmount = rollPicker.value
+            diceAmount = rollAmountPicker.value
+
+            // Sets the dice back to their state before the device was turned
             updateDiceImage(currentRoll)
-            setDiceVisibility(rollPicker.value)
+            setDiceVisibility(rollAmountPicker.value)
         }
 
         val historyList = findViewById<ImageView>(R.id.listImage)
@@ -79,8 +85,10 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         val intent = Intent(this, HistoryActivity::class.java)
 
-        rollHistory.reverse() // Reverse the list to return to the normal top down list
+        // Reverse the list to return to the normal top down list
+        rollHistory.reverse()
 
+        // Putting extra data before opening the history activity
         bundle.putSerializable("rollingHistory", rollHistory)
         intent.putExtra("idCounter", idCounter)
         intent.putExtra("historyBundle", bundle)
