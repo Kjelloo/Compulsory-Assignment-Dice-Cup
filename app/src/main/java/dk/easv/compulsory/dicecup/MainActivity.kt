@@ -66,8 +66,9 @@ class MainActivity : AppCompatActivity() {
             rollPicker.value = savedInstanceState.getInt("pickerValue") // Set number picker to previous value
             currentRoll = savedInstanceState.getParcelableArrayList<BeDie>("rolls") as ArrayList<BeDie>
             rollHistory = savedInstanceState.getSerializable("rollingHistory") as ArrayList<BeRoll>
+            diceAmount = rollPicker.value
             updateDiceImage(currentRoll)
-            setDiceVisibility(currentRoll.size)
+            setDiceVisibility(rollPicker.value)
         }
 
         val historyList = findViewById<ImageView>(R.id.listImage)
