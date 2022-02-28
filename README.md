@@ -1,2 +1,2 @@
 # Compulsory-Assignment-Dice-Cup
-By Mikkel Lod Mouridsen & Kjell Schoke
+By Mikkel Lodberg Mouridsen & Kjell Schoke
