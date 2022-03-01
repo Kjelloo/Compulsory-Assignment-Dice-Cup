@@ -35,9 +35,19 @@ class MainActivity : AppCompatActivity() {
     private var rollHistory = ArrayList<BeRoll>()
     private var idCounter = 1
 
+    private val diceHelper = DiceHelper()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val imageViewList = ArrayList<ImageView>()
+        imageViewList.add(findViewById(R.id.imgDice1))
+        imageViewList.add(findViewById(R.id.imgDice2))
+        imageViewList.add(findViewById(R.id.imgDice3))
+        imageViewList.add(findViewById(R.id.imgDice4))
+        imageViewList.add(findViewById(R.id.imgDice5))
+        imageViewList.add(findViewById(R.id.imgDice6))
 
         // Dice amount picker
         val rollAmountPicker = findViewById<NumberPicker>(R.id.nPRollAmount)
@@ -57,13 +67,13 @@ class MainActivity : AppCompatActivity() {
 
         rollAmountPicker.setOnValueChangedListener { _, _, newVal ->
             // Sets the amount of dice shown depending on the rollAmountPicker value
-            setDiceVisibility(newVal)
+            diceHelper.setDiceVisibility(newVal, imageViewList)
             diceAmount = newVal
         }
 
         // Roll Button
         val btnRoll = findViewById<Button>(R.id.btnRoll)
-        btnRoll.setOnClickListener { onRollButtonClick(rollAmountPicker.value) }
+        btnRoll.setOnClickListener { onRollButtonClick(rollAmountPicker.value, imageViewList) }
 
         if (savedInstanceState != null) {
             // Set number picker to previous value
@@ -73,8 +83,8 @@ class MainActivity : AppCompatActivity() {
             diceAmount = rollAmountPicker.value
 
             // Sets the dice back to their state before the device was turned
-            updateDiceImage(currentRoll)
-            setDiceVisibility(rollAmountPicker.value)
+            diceHelper.showDiceImages(500, currentRoll, imageViewList)
+            diceHelper.setDiceVisibility(rollAmountPicker.value, imageViewList)
         }
 
         val historyList = findViewById<ImageView>(R.id.listImage)
@@ -96,13 +106,13 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun onRollButtonClick(rollAmount: Int) {
+    private fun onRollButtonClick(rollAmount: Int, imageViewList: ArrayList<ImageView>) {
         val c = Calendar.getInstance().time
         val df = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         val formattedDate = df.format(c)
 
         val roll = rollDice(rollAmount)
-        updateDiceImage(roll)
+        diceHelper.showDiceImages(500, roll, imageViewList)
 
         rollHistory.add(BeRoll(idCounter++, roll, formattedDate))
     }
@@ -122,138 +132,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         return rolls
-    }
-
-    private fun setDiceVisibility(diceAmount: Int) {
-        try {
-            val imageViewList = ArrayList<ImageView>()
-            imageViewList.add(findViewById(R.id.imgDice1))
-            imageViewList.add(findViewById(R.id.imgDice2))
-            imageViewList.add(findViewById(R.id.imgDice3))
-            imageViewList.add(findViewById(R.id.imgDice4))
-            imageViewList.add(findViewById(R.id.imgDice5))
-            imageViewList.add(findViewById(R.id.imgDice6))
-
-            // Remove visibility of all dice images
-            for (i in 0 until imageViewList.size step 1) {
-                imageViewList[i].visibility = View.GONE
-            }
-
-            // sets dice image visibility depending on the amount of dice that need to be shown
-            when(diceAmount) {
-                1 -> {
-                    for (i in 0 until imageViewList.size-5 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                2 -> {
-                    for (i in 0 until imageViewList.size-4 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                3 -> {
-                    for (i in 0 until imageViewList.size-3 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                4 -> {
-                    for (i in 0 until imageViewList.size-2 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                5 -> {
-                    for (i in 0 until imageViewList.size-1 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                6 -> {
-                    for (i in 0 until imageViewList.size step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.d("EXCEPTION", e.message!!)
-        }
-    }
-
-    private fun updateDiceImage(dice: ArrayList<BeDie>) {
-        try {
-            val imageViewList = ArrayList<ImageView>()
-            imageViewList.add(findViewById(R.id.imgDice1))
-            imageViewList.add(findViewById(R.id.imgDice2))
-            imageViewList.add(findViewById(R.id.imgDice3))
-            imageViewList.add(findViewById(R.id.imgDice4))
-            imageViewList.add(findViewById(R.id.imgDice5))
-            imageViewList.add(findViewById(R.id.imgDice6))
-
-            // Sets the dice images depending on the dice that were rolled
-            when (dice.size) {
-                1 -> {
-                    for (i in 0 until imageViewList.size-5 step 1) {
-                        // Using picasso to cache the dice images
-                        Picasso
-                            .get()
-                            .load(dice[i].img)
-                            .resize(500,500)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                2 -> {
-                    for (i in 0 until imageViewList.size-4 step 1) {
-                        Picasso
-                            .get()
-                            .load(dice[i].img)
-                            .resize(500,500)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                3 -> {
-                    for (i in 0 until imageViewList.size-3 step 1) {
-                        Picasso
-                            .get()
-                            .load(dice[i].img)
-                            .resize(500,500)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                4 -> {
-                    for (i in 0 until imageViewList.size-2 step 1) {
-                        Picasso
-                            .get()
-                            .load(dice[i].img)
-                            .resize(500,500)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                5 -> {
-                    for (i in 0 until imageViewList.size-1 step 1) {
-                        Picasso
-                            .get()
-                            .load(dice[i].img)
-                            .resize(500,500)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                6 -> {
-                    for (i in 0 until imageViewList.size step 1) {
-                        Picasso
-                            .get()
-                            .load(dice[i].img)
-                            .resize(500,500)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.d("EXCEPTION", e.message!!)
-        }
     }
 
     override fun onSaveInstanceState(state: Bundle) {

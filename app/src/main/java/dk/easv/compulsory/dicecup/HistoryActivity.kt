@@ -4,21 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.squareup.picasso.Picasso
 import dk.easv.compulsory.dicecup.models.BeRoll
 
 
 class HistoryActivity : AppCompatActivity() {
 
-    private var idCounter = -1 // Init roll history id counter
-
+    private var idCounter = 1 // Init roll history id counter
     private var rollHistory = ArrayList<BeRoll>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
@@ -34,6 +32,7 @@ class HistoryActivity : AppCompatActivity() {
         // Get the id counter from the main activity
         idCounter = intent.getIntExtra("idCounter", -1)
 
+        // Sets content of roll history list view
         val adapter = HistoryAdapter(this, rollHistory, false)
         val lvRollHistory = findViewById<ListView>(R.id.lvRollHistory)
         lvRollHistory.adapter = adapter
@@ -51,8 +50,8 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun changePipViewType(checked: Boolean) {
-        if(checked){
+    private fun changePipViewType(asImage: Boolean) {
+        if(asImage){
             val adapter = HistoryAdapter(this, rollHistory, true)
             val lvRollHistory = findViewById<ListView>(R.id.lvRollHistory)
             lvRollHistory.adapter = adapter
@@ -90,7 +89,7 @@ class HistoryActivity : AppCompatActivity() {
     }
 
     internal class HistoryAdapter(context: Context, private val rollHistory: ArrayList<BeRoll>, private val asImage: Boolean): ArrayAdapter<BeRoll>(context,  0, rollHistory) {
-
+        private val diceHelper = DiceHelper()
         private val colours = intArrayOf(
             Color.parseColor("#bca7f2"),
             Color.parseColor("#8a6ad9")
@@ -105,7 +104,17 @@ class HistoryActivity : AppCompatActivity() {
             }
 
             val resView: View = v1!!
+            // Set color of list view
             resView.setBackgroundColor(colours[position % colours.size])
+
+            // List of dice images
+            val imageViewList = ArrayList<ImageView>()
+            imageViewList.add(resView.findViewById(R.id.pipImg1))
+            imageViewList.add(resView.findViewById(R.id.pipImg2))
+            imageViewList.add(resView.findViewById(R.id.pipImg3))
+            imageViewList.add(resView.findViewById(R.id.pipImg4))
+            imageViewList.add(resView.findViewById(R.id.pipImg5))
+            imageViewList.add(resView.findViewById(R.id.pipImg6))
 
             val roll = rollHistory[position]
             val idView = resView.findViewById<TextView>(R.id.tvRollId)
@@ -115,12 +124,12 @@ class HistoryActivity : AppCompatActivity() {
             idView.text = roll.id.toString()
             timestampView.text = roll.timestamp
 
-            if (asImage) { // show pips as image
+            if (asImage) { // show pips as images
                 rollsView.visibility = View.GONE
-                setDiceVisibility(roll.rolls.size, resView)
-                showDiceImages(roll, resView)
+                diceHelper.setDiceVisibility(roll.rolls.size, imageViewList)
+                diceHelper.showDiceImages(100, roll.rolls, imageViewList)
             } else { // show pips as text
-                setDiceVisibility(0, resView) // Hide all images
+                diceHelper.setDiceVisibility(0, imageViewList)
                 // Display the dice of a roll
                 val rollsTemp = ArrayList<Int>()
                 for (i in 0 until roll.rolls.size step 1) {
@@ -134,128 +143,6 @@ class HistoryActivity : AppCompatActivity() {
             }
 
             return resView
-        }
-
-        private fun showDiceImages(diceRoll: BeRoll, v: View) {
-            val imageViewList = ArrayList<ImageView>()
-            imageViewList.add(v.findViewById(R.id.pipImg1))
-            imageViewList.add(v.findViewById(R.id.pipImg2))
-            imageViewList.add(v.findViewById(R.id.pipImg3))
-            imageViewList.add(v.findViewById(R.id.pipImg4))
-            imageViewList.add(v.findViewById(R.id.pipImg5))
-            imageViewList.add(v.findViewById(R.id.pipImg6))
-
-            // Sets the dice images depending on the dice that were rolled
-            when (diceRoll.rolls.size) {
-                1 -> {
-                    for (i in 0 until imageViewList.size-5 step 1) {
-                        // Using picasso to cache the images to reduce lag in larger list views
-                        Picasso
-                            .get()
-                            .load(diceRoll.rolls[i].img)
-                            .resize(100,100)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                2 -> {
-                    for (i in 0 until imageViewList.size-4 step 1) {
-                        Picasso
-                            .get()
-                            .load(diceRoll.rolls[i].img)
-                            .resize(100,100)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                3 -> {
-                    for (i in 0 until imageViewList.size-3 step 1) {
-                        Picasso
-                            .get()
-                            .load(diceRoll.rolls[i].img)
-                            .resize(100,100)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                4 -> {
-                    for (i in 0 until imageViewList.size-2 step 1) {
-                        Picasso
-                            .get()
-                            .load(diceRoll.rolls[i].img)
-                            .resize(100,100)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                5 -> {
-                    for (i in 0 until imageViewList.size-1 step 1) {
-                        Picasso
-                            .get()
-                            .load(diceRoll.rolls[i].img)
-                            .resize(100,100)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-                6 -> {
-                    for (i in 0 until imageViewList.size step 1) {
-                        Picasso
-                            .get()
-                            .load(diceRoll.rolls[i].img)
-                            .resize(100,100)
-                            .onlyScaleDown()
-                            .into(imageViewList[i])
-                    }
-                }
-            }
-        }
-
-        private fun setDiceVisibility(diceAmount: Int, v: View) {
-            val imageViewList = ArrayList<ImageView>()
-            imageViewList.add(v.findViewById(R.id.pipImg1))
-            imageViewList.add(v.findViewById(R.id.pipImg2))
-            imageViewList.add(v.findViewById(R.id.pipImg3))
-            imageViewList.add(v.findViewById(R.id.pipImg4))
-            imageViewList.add(v.findViewById(R.id.pipImg5))
-            imageViewList.add(v.findViewById(R.id.pipImg6))
-
-            for (i in 0 until imageViewList.size step 1) {
-                imageViewList[i].visibility = View.GONE
-            }
-
-            when(diceAmount) {
-                1 -> {
-                    for (i in 0 until imageViewList.size-5 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                2 -> {
-                    for (i in 0 until imageViewList.size-4 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                3 -> {
-                    for (i in 0 until imageViewList.size-3 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                4 -> {
-                    for (i in 0 until imageViewList.size-2 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                5 -> {
-                    for (i in 0 until imageViewList.size-1 step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-                6 -> {
-                    for (i in 0 until imageViewList.size step 1) {
-                        imageViewList[i].visibility = View.VISIBLE
-                    }
-                }
-            }
         }
     }
 }

@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CA1DiceCup">
+
         <activity
             android:name=".HistoryActivity"
-            android:label="Roll history"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Roll history" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
